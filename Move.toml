@@ -1,0 +1,10 @@
+[package]
+name = "test"
+version = "0.0.1"
+published-at = "0xbce67b060a91d5c5d6dd99602065ba5454157793824c2d1be2509bef259d6575"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
+
+[addresses]
+test = "0x0"
