@@ -1,0 +1,38 @@
+upgrade test
+
+- log version 1
+
+export package=0xbce67b060a91d5c5d6dd99602065ba5454157793824c2d1be2509bef259d6575
+export counter=0x34e69ef27c72a998c38353352aef6748e161b9f7eaf944a4fbf69bcc80f5fb00
+export admin_cap=0xe57e570941ef47b2745c865d61e83514745a26e0e7e99f1409fc7f037299abb7
+export upgrade_cap=0x51cd1a3b5d5e66f51c7334a7e8c0d9be84c15988829eea26390d0a1853d26594
+
+counter object type: 0xbce67b060a91d5c5d6dd99602065ba5454157793824c2d1be2509bef259d6575::counter::Counter
+admin_cap object type: 0xbce67b060a91d5c5d6dd99602065ba5454157793824c2d1be2509bef259d6575::counter::AdminCap
+upgrade_cap object type: 0x2::package::UpgradeCap
+
+sui client call --function increment --module counter --package $package --args $counter --gas-budget 50000000
+
+
+- Upgrading
+
+change published-at field in Move.toml
+
+sui client upgrade --upgrade-capability $upgrade_cap --gas-budget 50000000
+
+
+- log version 2
+
+export new_package=0x83b1c211cca3e5817ea4f1092987d60eb7906606ed214e1fc793fc90db3edfe8
+export upgrade_cap=0x51cd1a3b5d5e66f51c7334a7e8c0d9be84c15988829eea26390d0a1853d26594
+export counter=0x34e69ef27c72a998c38353352aef6748e161b9f7eaf944a4fbf69bcc80f5fb00
+export admin_cap=0xe57e570941ef47b2745c865d61e83514745a26e0e7e99f1409fc7f037299abb7
+
+sui client call --function migrate --module counter --package $new_package --args $counter $admin_cap --gas-budget 50000000
+
+
+counter object type: 0xbce67b060a91d5c5d6dd99602065ba5454157793824c2d1be2509bef259d6575::counter::Counter
+admin_cap object type: 0xbce67b060a91d5c5d6dd99602065ba5454157793824c2d1be2509bef259d6575::counter::AdminCap
+upgrade_cap object type: 0x2::package::UpgradeCap
+
+sui client call --function decrement --module counter --package $new_package --args $counter --gas-budget 50000000
